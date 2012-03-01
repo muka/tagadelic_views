@@ -1,0 +1,11 @@
+name = Tagadelic Views
+description = Adds a Tagadelic View to the Views module
+core = 7.x
+package = "Taxonomy"
+
+
+files[] = includes/tagadelic_plugin_display_default.inc
+files[] = includes/tagadelic_plugin_style.inc
+files[] = includes/tagadelic_plugin_row_fields.inc
+
+
