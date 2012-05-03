@@ -114,6 +114,9 @@ function tagadelic_views_views_query_alter(&$view, &$query) {
 
   $query->add_having_expression( 0, 'taxonomy_term_data_tag_count > 0' );
 
+//  $query->add_orderby( NULL, NULL, 'DESC', 'taxonomy_term_data_tag_count' );
+
+//  new views_plugin_query_default();
 //  dsm($view);
 //  dsm($query);
 }

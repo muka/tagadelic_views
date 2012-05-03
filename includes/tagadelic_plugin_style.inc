@@ -71,7 +71,7 @@ class tagadelic_plugin_style extends views_plugin_style_list {
 
     $tags = tagadelic_build_weighted_tags($tags);
     /// @todo: use views sorting options
-    $tags = tagadelic_sort_tags($tags);
+//    $tags = tagadelic_sort_tags($tags);
 
     /// @TODO: check tagadelic requirement for vocabulary reference or rewrite theme function
     $voc = new StdClass();

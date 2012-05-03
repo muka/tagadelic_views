@@ -1,4 +1,7 @@
-CHANGELOG
+== CHANGELOG ==
 
-- 2012-05-03: First commit of dev 7.x-1.x
-- 
+2012-05-03
+ - #1047866 (#43) Removed tagadelic sorting in favour of views sorting
+ - #1047866 (#37) patch from mrfelton, added dependencies and rendering options
+ - #1047866 (#36) Added check to include taxonomy_term_data in views tables (tested with nodes)
+ - First commit for dev branch "7.x-1.x", thanks to douggreen that let me mantain the module.
