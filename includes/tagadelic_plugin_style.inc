@@ -1,15 +1,17 @@
 <?php
+
 /**
  * @file
- * Contains the list style plugin.
+ * Contains the tagadelic style plugin.
  */
 
 /**
- * Style plugin to render each item in an ordered or unordered list.
+ * Style plugin to render a weighted set of taxonomy terms.
  *
- * @ingroup views_style_plugins
+ * @ingroup tagadelic_style_plugins
  */
 class tagadelic_plugin_style extends views_plugin_style_list {
+
   /**
    * Set default options
    */
@@ -29,99 +31,57 @@ class tagadelic_plugin_style extends views_plugin_style_list {
 //    $steps = 6;
 //    $size = 60;
     $form['steps'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Steps'),
-      '#default_value' => $this->options['steps'] ? $this->options['steps'] : 6,
+        '#type' => 'textfield',
+        '#title' => t('Steps'),
+        '#default_value' => $this->options['steps'] ? $this->options['steps'] : 6,
     );
-   
   }
-  
-  function render(){
-    /* 
+
+  function render() {
+    /*
      * function tagadelic_build_weighted_tags($tags, $steps = 6) {
-     * 
+     *
      *    $tag: $tag->count, $tag->tid, $tag->name $tag->vid.
-    */
+     */
     $steps = 6;
-    if(isset($this->view->style_plugin->options['steps'])){
+    if (isset($this->view->style_plugin->options['steps'])) {
       $steps = $this->view->style_plugin->options['steps'];
     }
-//    dsm($steps);
-    
+
     $size = count($this->view->result);
-    // count, td.tid, td.vid, td.name, td.description 
+
+    // count, td.tid, td.vid, td.name, td.description
+    // Create a term-like object for `tagadelic_build_weighted_tags()`
+
     $tags = array();
-    
-    foreach ($this->view->result as $term){
-      $tags[ $term->tid ] = new StdClass(); 
-      $tags[ $term->tid ]->name = $term->taxonomy_term_data_name;
-      $tags[ $term->tid ]->tid = $term->tid;
-      $tags[ $term->tid ]->vid = $term->taxonomy_term_data_vid;
-      $tags[ $term->tid ]->count = $term->taxonomy_term_data_tag_count;
-      $tags[ $term->tid ]->description = $term->taxonomy_term_data_description;
+    foreach ($this->view->result as $term) {
+
+//      dsm($term);
+
+      $tid = isset($term->taxonomy_term_data_tag_tid) ? $term->taxonomy_term_data_tag_tid : $term->tid;
+      $vid = isset($term->taxonomy_term_data_vid) ? $term->taxonomy_term_data_vid: $term->taxonomy_term_data_tag_vid;
+
+      $tags[$tid] = new StdClass();
+      $tags[$tid]->name = $term->taxonomy_term_data_tag_name;
+      $tags[$tid]->tid = $tid;
+      $tags[$tid]->vid = $vid;
+      $tags[$tid]->count = $term->taxonomy_term_data_tag_count;
+      $tags[$tid]->description = $term->taxonomy_term_data_tag_description;
     }
-    
-    $tags = tagadelic_build_weighted_tags($tags);    
+
+    $tags = tagadelic_build_weighted_tags($tags);
     /// @todo: use views sorting options
     $tags = tagadelic_sort_tags($tags);
 
-    $output = theme('tagadelic_weighted', array('terms' => $tags));        
+    /// @TODO: check tagadelic requirement for vocabulary reference or rewrite theme function
+    $voc = new StdClass();
+    $voc->vid = 0;
 
-   
-    return $output;    
-    
+    $output = theme('tagadelic_weighted', array('terms' => $tags, 'voc' => $voc, 'more_link' => FALSE));
+
+
+    return $output;
   }
-  
+
 }
 
-//
-///**
-// * @file
-// * Handler for tagadelic_plugin_style.
-// */
-//class tagadelic_plugin_style extends views_plugin_style_list {
-//
-//  function render() {
-////    $options = $this->display->handler->get_option('tagadelic_options');
-//    
-////    dsm($this->view->query);
-////
-////    $fieldsMap = array();
-////    foreach ($this->view->field as $field_name => $viewFieldObj){
-////      foreach ($this->view->query->fields as $queryFieldName => $queryFieldData){
-////        if($queryFieldData['field'] == $field_name){
-////          $fieldsMap[ $field_name ] = $queryFieldName;
-////        }
-////      }
-////    }
-//    
-////    dsm($this->view->result);
-////    dsm($fieldsMap);
-////    
-////    $steps = 6;
-////    $size = 60;
-////    // count, td.tid, td.vid, td.name, td.description 
-////    $tags = array();
-////    
-////    foreach ($this->view->result as $term){
-////      krumo($term, $fieldsMap);die();
-////      if(isset($tags[ $term->tid ])){
-////        $tags[ $term->tid ]->count++;
-////        continue;
-////      }
-////      
-////      $tags[ $term->tid ] = new StdClass(); 
-////      $tags[ $term->tid ]->name = $term->{$fieldsMap['name']};
-////      $tags[ $term->tid ]->tid = $term->tid;
-////      $tags[ $term->tid ]->vid = $term->{$fieldsMap['vid']};
-////      $tags[ $term->tid ]->count = 1;
-////      $tags[ $term->tid ]->description = isset($term->{$fieldsMap['description']}) ? $term->{$fieldsMap['description']} : "";
-////    }
-////    
-////    $tags = tagadelic_build_weighted_tags($tags);
-////    $tags = tagadelic_sort_tags($tags);
-////    
-////    dsm($tags);
-//    return $results;
-//  }
-//}

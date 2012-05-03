@@ -1,0 +1,4 @@
+CHANGELOG
+
+- 2012-05-03: First commit of dev 7.x-1.x
+- 

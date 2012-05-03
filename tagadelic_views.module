@@ -1,56 +1,11 @@
 <?php
 
 /**
- * Implements hook_views_api().
+ * Implementation of hook_views_api().
  */
 function tagadelic_views_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'tagadelic_views') . '/includes',
+    'path' => drupal_get_path('module', 'tagadelic_views'),
   );
 }
-
-
-function tagadelic_views_views_query_alter(&$view, &$query) {
-
-  if(  get_class($view->style_plugin) != 'tagadelic_plugin_style')
-  {
-    return;
-  }
-
-  $field_name = $query->add_field('taxonomy_term_data', 'name', $alias = 'taxonomy_term_data_tag_count', $params = array('function' => 'count'));
-  $field_desc = $query->add_field('taxonomy_term_data', 'description', $alias = 'taxonomy_term_data_description');  
-
-//  $query->add_groupby($field_name);  
-  $query->add_groupby($field_desc);  
-//    
-//  $query->add_table('taxonomy_index', $relationship = NULL, $join = NULL);
-//  
-//           new views_join($table = NULL, $left_table = NULL, $left_field = NULL, $field = NULL, $extra = array(), $type = 'LEFT')
-//  $join = new views_join('taxonomy_index', 'taxonomy_tern_data', 'tid', 'tid', $extra = array(), $type = 'LEFT');  
-//  dsm($join);
-  $join = views_get_table_join('taxonomy_index', 'taxonomy_term_data');  
-  $query->add_relationship("taxonomy_index_taxonomy_term_data", $join, 'taxonomy_index', $link_point = NULL);
-  
-  $query->add_having_expression( 0, 'COUNT(*) > 0' );
-  
-//  $query->orderRandom();
-//  $query->add_orderby('taxonomy_term_data_tag_count', 'ASC');
-  
-  
-//  dsm( $view );
-//  dsm( get_class_methods( $query ));
-//  dsm( $query );
-  
-}
-
-
-//function tagadelic_views_theme(){
-//  return array(
-//    'tagadelic_views_row' => array('vars'=>array()),
-//  );
-//}
-
-//function template_preprocess_tagadelic_views_row(&$vars){
-//  krumo($vars);
-//}

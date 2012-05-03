@@ -1,6 +1,7 @@
 name = Tagadelic Views
 description = Adds a Tagadelic View to the Views module
 core = 7.x
+dependencies[] = tagadelic
 package = "Taxonomy"
 
 
